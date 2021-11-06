@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style>
+    td{border:solid 1px yellow;}
+</style>
+
+<body>
+
+<div>
+    <a th:href="@{show_goods_list(field_name=${field_name}, field_value=${field_value},
+             start_page=${start_page}, page_size=${page_size})}">放弃增加操作</a>
+</div>
+
+
+<table id="goods_table">
+    <thead>
+    <th>商品编号</th>
+    <th>商品名称</th>
+    <th>商品进价（元/件）</th>
+    <th>商品售价（元/件）</th>
+    <th>商品简介</th>
+    <th>增加</th>
+    <th>移除</th>
+    </thead>
+    <tbody id="goodss">
+        <tr>
+            <td><input type="text" maxlength="9" name="goods_id"></td>
+            <td><input type="text" maxlength="20" name="goods_name"></td>
+            <td><input type="text" maxlength="9" name="in_price"></td>
+            <td><input type="text" maxlength="9" name="unit_sale_price"></td>
+            <td><textarea type="text" th:width="20" th:height="5" name="goods_introduce" width="20" height="5"></textarea></td>
+
+            <td><input type="button" onclick="addElement(this)" value="增加新纪录"></td>
+            <td><input type="button" onclick="delElement(this)" value="删除该记录"></td>
+        </tr>
+    </tbody>
+</table>
+
+<p><input type="button" id="list_add" value="批量添加"></p>
+
+</body>
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/add.js"></script>
+
+
+</html>

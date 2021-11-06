@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <a th:href="@{show_monitor_login(field_name='#')}">前往管理员端</a>
+    </div>
+
+    <div style="text-align:center;" >
+        <form action="check_client_login" method="post">
+            <div><p>用户名：<input type="text" maxlength="30" name="client_id" id="client_id"></p></div>
+            <div><p>密码：<input type="password" maxlength="30" name="client_pwd" id="client_pwd"></p></div>
+
+            <div>
+                <input type="submit" value="登录">
+            </div>
+<!--            <div>-->
+<!--                <a th:href="@{show_client_rigister(field_name='#')}">注册</a>-->
+<!--            </div>-->
+        </form>
+    </div>
+</body>
+</html>

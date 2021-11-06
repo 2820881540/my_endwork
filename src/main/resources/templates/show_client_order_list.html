@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<style>
+    td{border:solid 1px yellow;}
+</style>
+
+<body>
+
+<div>
+    <h th:text="${client.getClient_id()}"></h>
+    <h th:text="${client.getClient_name()}"></h>
+    余额：<h th:text="${client.getClient_balance()}"></h>元
+
+</div>
+
+
+<div>
+    <a th:href="@{return_to_client_main(field_name='#')}">返回主页</a>
+    <a th:href="@{return_to_client_login(field_name='#')}">退出登录</a>
+</div>
+
+<form action="show_client_order_list" method="post">
+    <select name="valid_order_field_name">
+        <option value="all" th:selected="${valid_order_field_name=='all'}">全部</option>
+        <option value="store_name" th:selected="${valid_order_field_name=='store_name'}">门店名</option>
+        <option value="store_id" th:selected="${valid_order_field_name=='store_id'}">门店编号</option>
+        <option value="order_date" th:selected="${valid_order_field_name=='order_date'}">订单日期</option>
+        <option value="order_id" th:selected="${valid_order_field_name=='order_id'}">订单号</option>
+    </select>
+    <input type="text" name="valid_order_field_value" th:value="${valid_order_field_value}">
+    <input type="hidden" th:name="valid_order_start_page" th:value="1">
+    <input type="hidden" th:name="valid_order_page_size" th:value="10">
+
+
+    <input type="hidden" name="invalid_order_field_name" th:value="${invalid_order_field_name}">
+    <input type="hidden" name="invalid_order_field_value" th:value="${invalid_order_field_value}">
+    <input type="hidden" name="invalid_order_start_page" th:value="1">
+    <input type="hidden" name="invalid_order_page_size" th:value="10">
+
+
+    <input type="submit" value="查询待处理订单">
+</form>
+<!--
+<div>
+    <button><a th:href="@{show_add_a_store(field_name=${field_name},
+                            field_value=${field_value},
+                            start_page=${start_page},
+                            page_size=${page_size})}">添加</a></button>
+</div>
+-->
+<!--显示用户订单，分别显示用户已取消的订单表和有效订单表-->
+<!--所有有效订单各可恢复一次，恢复后若再取消，则不能再恢复-->
+
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>订单号</th>
+            <th>订单状况</th>
+            <th>订单条目（元/件）</th>
+            <th>订单金额（元）</th>
+            <th>门店名</th>
+            <th>订单日期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+
+        <div th:each="item, itemStat:${valid_order_list}">
+            <tr>
+                <td th:text="${item.getOrder_id()}"></td>
+                <td text="订单处理中">订单处理中</td>
+                <td>
+                    <table>
+                        <div th:each="client_order_sale_item, itemStat:${item.getOrderSaleList()}">
+                            <tr>
+                                <td th:text="${client_order_sale_item.getGoods_name()}"></td>
+                                <td th:text="${client_order_sale_item.getSale_goods_amount()}"></td>
+                                <td>*</td>
+                                <td th:text="${client_order_sale_item.getUnit_sale_price()}"></td>
+                            </tr>
+                        </div>
+                    </table>
+                </td>
+
+                <td th:text="${item.getOrder_price()}"></td>
+                <td th:text="${item.getStore_name()}"></td>
+                <td th:text="${item.getOrder_date()}"></td>
+                <!--show_edit_order 未编写-->
+
+                <td><!--<a th:href="@{show_edit_order(order_id=item.getOrder_id(),
+                 valid_order_field_name=${valid_order_field_name}, valid_order_field_value=${valid_order_field_value},
+                 valid_order_start_page=${valid_order_start_page}, valid_order_page_size=${valid_order_page_size},
+                 invalid_order_field_name=${invalid_order_field_name}, invalid_order_field_value=${invalid_order_field_value},
+                 invalid_order_start_page=${invalid_order_start_page}, invalid_order_page_size=${invalid_order_page_size})}">修改
+                </a>|--><a th:href="@{cancel_client_order(order_id=${item.getOrder_id()},
+                         valid_order_field_name=${valid_order_field_name}, valid_order_field_value=${valid_order_field_value},
+                         valid_order_start_page=${valid_order_start_page}, valid_order_page_size=${valid_order_page_size},
+                         invalid_order_field_name=${invalid_order_field_name}, invalid_order_field_value=${invalid_order_field_value},
+                         invalid_order_start_page=${invalid_order_start_page}, invalid_order_page_size=${invalid_order_page_size})}">取消订单
+                        </a>
+                </td>
+            </tr>
+        </div>
+    </table>
+
+    <div>分页信息：
+        <a th:href="@{show_client_order_list(valid_order_field_name=${valid_order_field_name}, valid_order_field_value=${valid_order_field_value},
+                 valid_order_start_page=${valid_order_start_page}-1, valid_order_page_size=${valid_order_page_size},
+                 invalid_order_field_name=${invalid_order_field_name}, invalid_order_field_value=${invalid_order_field_value},
+                 invalid_order_start_page=${invalid_order_start_page}, invalid_order_page_size=${invalid_order_page_size})}">上一页</a>
+
+        <a th:href="@{show_client_order_list(valid_order_field_name=${valid_order_field_name}, valid_order_field_value=${valid_order_field_value},
+                 valid_order_start_page=${valid_order_start_page}+1, valid_order_page_size=${valid_order_page_size},
+                 invalid_order_field_name=${invalid_order_field_name}, invalid_order_field_value=${invalid_order_field_value},
+                 invalid_order_start_page=${invalid_order_start_page}, invalid_order_page_size=${invalid_order_page_size})}">下一页</a>
+
+    </div>
+</div>
+
+<br><br><br><br><br>
+
+<form action="show_client_order_list" method="post">
+    <select name="invalid_order_field_name">
+        <option value="all" th:selected="${invalid_order_field_name=='all'}">全部</option>
+        <option value="store_name" th:selected="${invalid_order_field_name=='store_name'}">门店名</option>
+        <option value="store_id" th:selected="${invalid_order_field_name=='store_id'}">门店编号</option>
+        <option value="order_date" th:selected="${invalid_order_field_name=='order_date'}">订单日期</option>
+        <option value="order_id" th:selected="${invalid_order_field_name=='order_id'}">订单号</option>
+    </select>
+    <input type="text" name="invalid_order_field_value" th:value="${invalid_order_field_value}">
+    <input type="hidden" th:name="invalid_order_start_page" th:value="1">
+    <input type="hidden" th:name="invalid_order_page_size" th:value="10">
+
+
+
+    <input type="hidden" name="valid_order_field_name" th:value="${valid_order_field_name}">
+    <input type="hidden" name="valid_order_field_value" th:value="${valid_order_field_value}">
+    <input type="hidden" name="valid_order_start_page" th:value="1">
+    <input type="hidden" name="valid_order_page_size" th:value="10">
+
+    <input type="submit" value="查询已取消订单">
+</form>
+
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>订单号</th>
+            <th>订单状况</th>
+            <th>订单条目（元/件）</th>
+            <th>订单金额</th>
+            <th>门店名</th>
+            <th>订单日期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+
+        <div th:each="item, itemStat:${invalid_order_list}">
+            <tr>
+                <td th:text="${item.getOrder_id()}"></td>
+                <td text="订单已取消" >订单已取消</td>
+                <td>
+                    <table>
+                        <div th:each="client_order_sale_item, itemStat:${item.getOrderSaleList()}">
+                            <tr>
+                                <td th:text="${client_order_sale_item.getGoods_name()}"></td>
+                                <td th:text="${client_order_sale_item.getSale_goods_amount()}"></td>
+                                <td>*</td>
+                                <td th:text="${client_order_sale_item.getUnit_sale_price()}"></td>
+                            </tr>
+                        </div>
+                    </table>
+                </td>
+
+                <td th:text="${item.getOrder_price()}"></td>
+                <td th:text="${item.getStore_name()}"></td>
+                <td th:text="${item.getOrder_date()}"></td>
+
+
+                <!--恢复用户订单 recover_client_order 未编写-->
+                <td>
+                    <input type="hidden" th:name="recover_chance" th:value="${item.getRecover_chance()}">
+                    <a th:href="@{recover_client_order(order_id=${item.getOrder_id()},
+                     valid_order_field_name=${valid_order_field_name}, valid_order_field_value=${valid_order_field_value},
+                     valid_order_start_page=${valid_order_start_page}, valid_order_page_size=${valid_order_page_size},
+                     invalid_order_field_name=${invalid_order_field_name}, invalid_order_field_value=${invalid_order_field_value},
+                     invalid_order_start_page=${invalid_order_start_page}, invalid_order_page_size=${invalid_order_page_size})}">恢复订单
+                    </a>
+                </td>
+            </tr>
+        </div>
+    </table>
+
+    <div>分页信息：
+        <a th:href="@{show_client_order_list(valid_order_field_name=${valid_order_field_name}, valid_order_field_value=${valid_order_field_value},
+                 valid_order_start_page=${valid_order_start_page}, valid_order_page_size=${valid_order_page_size},
+                 invalid_order_field_name=${invalid_order_field_name}, invalid_order_field_value=${invalid_order_field_value},
+                 invalid_order_start_page=${invalid_order_start_page}-1, invalid_order_page_size=${invalid_order_page_size})}">上一页</a>
+
+        <a th:href="@{show_client_order_list(valid_order_field_name=${valid_order_field_name}, valid_order_field_value=${valid_order_field_value},
+                 valid_order_start_page=${valid_order_start_page}, valid_order_page_size=${valid_order_page_size},
+                 invalid_order_field_name=${invalid_order_field_name}, invalid_order_field_value=${invalid_order_field_value},
+                 invalid_order_start_page=${invalid_order_start_page}+1, invalid_order_page_size=${invalid_order_page_size})}">下一页</a>
+
+    </div>
+</div>
+
+
+</body>
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/check_recover_chance.js"></script>
+</html>

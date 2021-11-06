@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.endwork.mapper.MonitorMapper">
+    <select id="getAMonitor"
+            resultType="com.endwork.entity.Monitor">
+        select * from monitor
+        where monitor_id=#{monitor_id} and monitor_pwd=#{monitor_pwd}
+    </select>
+
+    <select id="getStoreList"
+            resultType="com.endwork.entity.Store">
+        SELECT * from store
+        where 1=1
+        <if test="field_name != 'all'">
+            and ${field_name} like '%${field_value}%'
+        </if>
+        limit ${start}, ${page_size}
+    </select>
+
+
+    <select id="getGoodsList"
+            resultType="com.endwork.entity.Goods">
+        SELECT * from goods
+        where 1=1
+        <if test="field_name != 'all'">
+            and ${field_name} like '%${field_value}%'
+        </if>
+        limit ${start}, ${page_size}
+    </select>
+
+
+    <select id="getOrderList"
+            resultType="com.endwork.entity.Order">
+        select o.*, s.store_name, cli.client_name from `order` o
+        INNER JOIN store s ON s.store_id = o.store_id
+        INNER JOIN `client` cli ON cli.client_id=o.client_id
+        where 1=1
+        <if test="field_name != 'all'">
+            <if test="field_name == 'store_id'">
+                and o.${field_name} like '%${field_value}%'
+            </if>
+            <if test="field_name != 'store_id'">
+                and ${field_name} like '%${field_value}%'
+            </if>
+        </if>
+        order by o.order_date desc
+        limit ${start}, ${page_size}
+    </select>
+
+
+
+    <select id="getOrderListInPotency"
+            resultType="com.endwork.entity.Order">
+        select o.*, s.store_name, cli.client_name, cli.client_id from `order` o
+        INNER JOIN store s ON s.store_id = o.store_id
+        INNER JOIN `client` cli ON cli.client_id=o.client_id
+        where order_status=#{order_status}
+        <if test="field_name != 'all'">
+            <if test="field_name == 'store_id'">
+                and o.${field_name} like '%${field_value}%'
+            </if>
+            <if test="field_name != 'store_id'">
+                and ${field_name} like '%${field_value}%'
+            </if>
+        </if>
+        order by o.order_date desc
+        limit ${start}, ${page_size}
+    </select>
+
+    <select id="get_order_sale_list"
+            resultType="com.endwork.entity.OrderSale">
+        select o.*, g.goods_name, g.unit_sale_price from order_sale o
+        INNER JOIN goods g ON o.goods_id = g.goods_id
+        where order_id=#{order_id}
+    </select>
+
+
+    <insert id="add_a_goods">
+       insert into goods(goods_id, goods_name, in_price, unit_sale_price, goods_introduce)
+            values (#{goods_id}, #{goods_name}, #{in_price}, #{unit_sale_price}, #{goods_introduce})
+    </insert>
+
+
+    <insert id="add_a_stock">
+       INSERT INTO stock (store_id, goods_id, amount)
+            VALUES(#{store_id}, #{goods_id}, #{amount}) ;
+    </insert>
+
+
+
+    <select id="getStockList"
+            resultType="com.endwork.entity.Stock">
+        SELECT stock.*, goods.goods_name, store.store_name from stock
+        INNER JOIN goods ON stock.goods_id = goods.goods_id
+        INNER JOIN store ON store.store_id = stock.store_id
+        where stock.store_id=#{store_id}
+        limit ${start}, ${page_size}
+    </select>
+
+
+    <select id="getAEditStock"
+            resultType="com.endwork.entity.Stock">
+        SELECT * from stock
+        where store_id=#{store_id} and goods_id=#{goods_id}
+    </select>
+
+    <select id="getAEditGoods"
+            resultType="com.endwork.entity.Goods">
+        SELECT * from goods
+        where goods_id=#{goods_id}
+    </select>
+
+    <select id="getAEditStore"
+            resultType="com.endwork.entity.Store">
+        SELECT * from store
+        where store_id=#{store_id}
+    </select>
+
+
+    <select id="getStoreGoodsList"
+            resultType="com.endwork.entity.Goods">
+        SELECT goods.* from `goods`
+        inner join `stock` on `stock`.goods_id=`goods`.goods_id
+        inner join `store` on `store`.store_id=`stock`.store_id
+        where 1=1
+        <if test="field_name != 'all'">
+            and `store`.${field_name} like '%${field_value}%'
+        </if>
+    </select>
+
+
+    <select id="get_store_for_add_goods_list"
+            resultType="com.endwork.entity.Goods">
+        SELECT goods.* from `goods`
+        where goods_id not in (
+            select goods_id from `stock`
+            inner join `store` on `store`.store_id=`stock`.store_id
+            where 1=1
+            <if test="field_name != 'all'">
+                and store.${field_name} like '%${field_value}%'
+            </if>
+        )
+    </select>
+
+
+    <update id="save_edit_stock">
+        update stock
+        set amount=#{amount}
+        where store_id=#{store_id} and goods_id=#{goods_id}
+    </update>
+
+    <update id="saveEditStore">
+        update store
+        set store_name=#{store_name},
+            cash=#{cash},
+            address=#{address}
+        where store_id=#{store_id}
+    </update>
+
+    <update id="saveEditGoods">
+        update goods
+        set goods_name=#{goods_name},
+            in_price=#{in_price},
+            unit_sale_price=#{unit_sale_price},
+            goods_introduce=#{goods_introduce}
+        where goods_id=#{goods_id}
+    </update>
+</mapper>

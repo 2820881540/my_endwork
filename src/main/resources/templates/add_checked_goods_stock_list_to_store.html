@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style>
+    td{border:solid 1px yellow;}
+</style>
+<body>
+
+<div>
+    <a th:href="@{show_store_list(field_name=${field_name}, field_value=${field_value},
+         start_page=${start_page}, page_size=${page_size})}">返回商店列表</a>
+    <a th:href="@{return_to_monitor_login(field_name='#')}">管理员账号登出</a>
+</div>
+
+<div>
+
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>门店编号</th>
+                <th>门店名</th>
+                <th>商品性质</th>
+            </tr>
+            </thead>
+
+            <div>
+                <tr>
+                    <td id="store_id" name="store_id" th:text="${store_id}"></td>
+                    <td th:text="${store_name}"></td>
+                    <td th:text="已上架"></td>
+                </tr>
+            </div>
+        </table>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>商品 id</th>
+            <th>商品性质</th>
+            <th>商品名称</th>
+            <th>商品进价(元/件)</th>
+            <th>商品售价(元/件)</th>
+            <th>商品简介</th>
+        </tr>
+        </thead>
+
+
+
+        <div th:each="item, itemStat:${store_exist_goods_list}">
+            <tr>
+                <td th:text="${item.getGoods_id()}"></td>
+                <td th:text="已上架"></td>
+                <td th:text="${item.getGoods_name()}"></td>
+                <td th:text="${item.getIn_price()}"></td>
+                <td th:text="${item.getUnit_sale_price()}"></td>
+                <td th:text="${item.getGoods_introduce()}"></td>
+            </tr>
+        </div>
+    </table>
+
+    分页信息：
+    <a th:href="@{show_add_checked_goods_stock_list_to_store(store_id=${store_id},
+                    store_name=${store_name},
+                    field_name=${field_name},field_value=${field_value},
+                    start_page=${start_page}, page_size=${page_size},
+                    store_exist_goods_start_page=${store_exist_goods_start_page}-1,
+                    store_exist_goods_page_size=${store_exist_goods_page_size},
+                    store_for_add_goods_start_page=${store_for_add_goods_start_page},
+                    store_for_add_goods_page_size=${store_for_add_goods_page_size})}">上一页
+    </a>
+    <a th:href="@{show_add_checked_goods_stock_list_to_store(store_id=${store_id},
+                    store_name=${store_name},
+                    field_name=${field_name},field_value=${field_value},
+                    start_page=${start_page}, page_size=${page_size},
+                    store_exist_goods_start_page=${store_exist_goods_start_page}+1,
+                    store_exist_goods_page_size=${store_exist_goods_page_size},
+                    store_for_add_goods_start_page=${store_for_add_goods_start_page},
+                    store_for_add_goods_page_size=${store_for_add_goods_page_size})}">下一页
+    </a>
+</div>
+
+
+
+<div>
+
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>门店编号</th>
+                <th>门店名</th>
+                <th>商品性质</th>
+            </tr>
+            </thead>
+
+            <div>
+                <tr>
+                    <td th:text="${store_id}"></td>
+                    <td th:text="${store_name}"></td>
+                    <td th:text="未上架"></td>
+                </tr>
+            </div>
+        </table>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>商品 id</th>
+            <th>商品性质</th>
+            <th>商品名称</th>
+            <th>商品进价(元)</th>
+            <th>商品售价(元)</th>
+            <th>商品简介</th>
+            <th>数量</th>
+
+        </tr>
+        </thead>
+
+
+
+        <div th:each="item, itemStat:${store_for_add_goods_list}">
+            <tr>
+                <td th:text="${item.getGoods_id()}" th:value="${item.getGoods_id()}" name="goods_id"></td>
+                <td th:text="未上架" value="未上架" name="未上架"></td>
+                <td th:text="${item.getGoods_name()}" th:value="${item.getGoods_name()}" name="goods_name"></td>
+                <td th:text="${item.getIn_price()}" th:value="${item.getIn_price()}" name="in_price"></td>
+                <td th:text="${item.getUnit_sale_price()}" th:value="${item.getUnit_sale_price()}" name="unit_sale_price"></td>
+                <td th:text="${item.getGoods_introduce()}" th:value="${item.getGoods_introduce()}" name="goods_introduce"></td>
+
+                <td>
+                    <input type="button" value="-" style="width:30px; height:28px;" name="add">
+                    <input type="text" value='0' style="width:64px;height:25px;" name="initial_amount">
+                    <input type="button" value="+" style="width:30px; height:28px;" name="sub">
+
+                    <input type="checkbox" name="goods_id" th:value="${item.getGoods_id()}" readonly="readonly">
+
+                    <input  type="text" th:value="${item.getGoods_id()}" name="goods_id_for_add" hidden="hidden">
+                    <input  type="text" th:value="${item.getGoods_name()}" name="goods_name_for_add" hidden="hidden">
+                    <input  type="text" th:value="${store_id}" name="store_id_for_add" hidden="hidden">
+                    <input  type="text" th:value="${item.getIn_price()}" name="in_price_for_add" hidden="hidden">
+                    <input  type="text" th:value="${item.getUnit_sale_price()}" name="unit_sale_price_for_add" hidden="hidden">
+                    <input  type="text" th:value="${item.getGoods_introduce()}" name="goods_introduce_for_add" hidden="hidden">
+
+                </td>
+            </tr>
+        </div>
+    </table>
+
+    <p><input type="submit" id="list_add" value="批量添加"></p>
+
+
+    分页信息：
+    <a th:href="@{show_add_checked_goods_stock_list_to_store(store_id=${store_id},
+                    store_name=${store_name},
+                    field_name=${field_name},field_value=${field_value},
+                    start_page=${start_page}, page_size=${page_size},
+                    store_exist_goods_start_page=${store_exist_goods_start_page},
+                    store_exist_goods_page_size=${store_exist_goods_page_size},
+                    store_for_add_goods_start_page=${store_for_add_goods_start_page}-1,
+                    store_for_add_goods_page_size=${store_for_add_goods_page_size})}">上一页
+    </a>
+    <a th:href="@{show_add_checked_goods_stock_list_to_store(store_id=${store_id},
+                    store_name=${store_name},
+                    field_name=${field_name},field_value=${field_value},
+                    start_page=${start_page}, page_size=${page_size},
+                    store_exist_goods_start_page=${store_exist_goods_start_page},
+                    store_exist_goods_page_size=${store_exist_goods_page_size},
+                    store_for_add_goods_start_page=${store_for_add_goods_start_page}+1,
+                    store_for_add_goods_page_size=${store_for_add_goods_page_size})}">下一页
+    </a>
+</div>
+
+<div>
+    <input type="hidden" th:name="store_id" th:value="${store_id}">
+    <input type="hidden" th:name="store_name" th:value="${store_name}">
+    <input type="hidden" th:name="field_name" th:value="${field_name}">
+    <input type="hidden" th:name="field_value" th:value="${field_value}">
+    <input type="hidden" th:name="start_page" th:value="${start_page}">
+    <input type="hidden" th:name="page_size" th:value="${page_size}">
+    <input type="hidden" th:name="store_exist_goods_start_page" th:value="${store_exist_goods_start_page}">
+    <input type="hidden" th:name="store_exist_goods_page_size" th:value="${store_exist_goods_page_size}">
+    <input type="hidden" th:name="store_for_add_goods_start_page" th:value="${store_for_add_goods_start_page}">
+    <input type="hidden" th:name="store_for_add_goods_page_size" th:value="${store_for_add_goods_page_size}">
+</div>
+
+
+</body>
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/add_stock_list.js"></script>
+
+</html>

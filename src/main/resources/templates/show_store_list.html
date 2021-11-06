@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style>
+    td{border:solid 1px yellow;}
+</style>
+<body>
+
+<div>
+    <a th:href="@{return_to_monitor_main(field_name='#')}">返回管理员主页</a>
+    <a th:href="@{return_to_monitor_login(field_name='#')}">管理员账号登出</a>
+</div>
+
+<form action="show_store_list" method="post">
+    <select name="field_name">
+        <option value="all" th:selected="${field_name=='all'}">全部</option>
+        <option value="store_id" th:selected="${field_name=='store_id'}">门店编号</option>
+        <option value="store_name" th:selected="${field_name=='store_name'}">门店名</option>
+        <option value="address" th:selected="${field_name=='address'}">门店地址</option>
+
+    </select>
+    <input type="text" name="field_value" id="field_value" th:value="${field_value}">
+
+    <input type="hidden" th:name="start_page" th:value="1">
+    <input type="hidden" th:name="page_size" th:value="10">
+    <input type="submit" value="查询">
+</form>
+<!--
+<div>
+    <button><a th:href="@{show_add_a_store(field_name=${field_name},
+                            field_value=${field_value},
+                            start_page=${start_page},
+                            page_size=${page_size})}">添加</a></button>
+</div>
+-->
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>门店 id</th>
+            <th>门店店名</th>
+            <th>门店地址</th>
+            <th>当前资金（元）</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+
+
+
+        <div th:each="item, itemStat:${storeList}">
+            <tr>
+                <td th:text="${item.getStore_id()}"></td>
+                <td th:text="${item.getStore_name()}"></td>
+                <td th:text="${item.getAddress()}"></td>
+                <td th:text="${item.getCash()}"></td>
+
+                <!--delete_store 未编写-->
+
+                <td><a th:href="@{show_edit_store(store_id=${item.getStore_id()},
+                    field_name=${field_name},field_value=${field_value},
+                    start_page=${start_page}, page_size=${page_size})}">修改
+                </a>|<a th:href="@{show_store_order_list(store_id=${item.getStore_id()},
+                    store_name=${item.getStore_name()},
+                    field_name=${field_name},field_value=${field_value},
+                    start_page=${start_page}, page_size=${page_size},
+                    store_valid_order_start_page='1', store_valid_order_page_size='10',
+                    store_invalid_order_start_page='1', store_invalid_order_page_size='10')}">显示该商店的订单
+                </a>|<a th:href="@{show_add_checked_goods_stock_list_to_store(store_id=${item.getStore_id()},
+                    store_name=${item.getStore_name()},
+                    field_name=${field_name},field_value=${field_value},
+                    start_page=${start_page}, page_size=${page_size},
+                    store_exist_goods_start_page='1', store_exist_goods_page_size='10',
+                    store_for_add_goods_start_page='1', store_for_add_goods_page_size='10')}">上架新产品
+                </a>
+<!--                    |<a th:href="@{delete_store(store_id=${item.getStore_id()},-->
+<!--                    field_name=${field_name},field_value=${field_value},-->
+<!--                    start_page=${start_page}, page_size=${page_size})}">删除-->
+<!--                </a>-->
+                    |<a th:href="@{show_store_stock_list(store_id=${item.getStore_id()},
+                    store_name=${item.getStore_name()},
+                    field_name=${field_name},field_value=${field_value},
+                    start_page=${start_page}, page_size=${page_size},
+                    store_stock_start_page='1', store_stock_page_size='10')}">商品管理</a>
+                </td>
+            </tr>
+        </div>
+    </table>
+</div>
+
+<div>分页信息：
+    <a th:href="@{show_store_list(field_name=${field_name},
+                                    field_value=${field_value},
+                                    start_page=${start_page - 1},
+                                    page_size=${page_size})}">上一页</a>
+
+    <a th:href="@{show_store_list(field_name=${field_name},
+                                    field_value=${field_value},
+                                    start_page=${start_page + 1},
+                                    page_size=${page_size})}">下一页</a>
+</div>
+
+</body>
+</html>

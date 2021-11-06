@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <h th:text="${client.getClient_id()}"></h>
+        <h th:text="${client.getClient_name()}"></h>
+        余额：<h th:text="${client.getClient_balance()}"></h>元
+
+    </div>
+
+    <div><a th:href="@{show_client_order_list(valid_order_field_name='all', valid_order_field_value='',
+                 valid_order_start_page=1, valid_order_page_size=10,
+                 invalid_order_field_name='all', invalid_order_field_value='',
+                 invalid_order_start_page=1, invalid_order_page_size=10)}">我的订单</a>
+    </div>
+    <div><a th:href="@{show_client_store_list(field_name='all', field_value='',
+         start_page=1, page_size=10)}">查看门店</a>
+    </div>
+
+    <div>
+        <a th:href="@{return_to_client_login(field_name='#')}">退出登录</a>
+    </div>
+
+
+
+</body>
+</html>

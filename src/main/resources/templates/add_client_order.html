@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style type="text/css">
+    table{width: 70%;}
+    #inline1{display: inline}
+    #inline2{display: inline}
+
+    td{border:solid 1px yellow;}
+</style>
+<body>
+
+    <div>
+        <h th:text="${client.getClient_id()}"></h>
+        <h th:text="${client.getClient_name()}"></h>
+        余额：<h th:text="${client.getClient_balance()}"></h>元
+
+    </div>
+
+    <div>
+        <a th:href="@{show_client_store_list(field_name=${field_name}, field_value=${field_value},
+             start_page=${start_page}, page_size=${page_size})}">返回商店列表</a>
+        <a th:href="@{return_to_client_login(field_name='#')}">退出登录</a>
+
+        <input  type="number" th:value="${store_goods_list.size()}" name="store_goods_list_size" hidden="hidden">
+    </div>
+
+    <div>
+        <table style="text-align: center">
+            <thead>
+            <tr>
+                <th>门店编号</th>
+                <th>门店名</th>
+            </tr>
+            </thead>
+
+            <div>
+                <tr>
+                    <td th:text="${store_id}"></td>
+                    <td th:text="${store_name}"></td>
+                </tr>
+            </div>
+        </table>
+    </div>
+
+    <table style="text-align:center">
+        <thead>
+        <tr>
+            <th>商品 id</th>
+            <th>商品名称</th>
+            <th>商品售价(元)</th>
+            <th>商品简介</th>
+            <th>购买数量</th>
+
+        </tr>
+        </thead>
+
+
+
+        <div th:each="item, itemStat:${store_goods_list}">
+            <tr>
+                <td th:text="${item.getGoods_id()}" th:value="${item.getGoods_id()}" name="goods_id"></td>
+                <td th:text="${item.getGoods_name()}" th:value="${item.getGoods_name()}" name="goods_name"></td>
+                <td th:text="${item.getUnit_sale_price()}" th:value="${item.getUnit_sale_price()}" name="unit_sale_price"></td>
+                <td th:text="${item.getGoods_introduce()}" th:value="${item.getGoods_introduce()}" name="goods_introduce"></td>
+
+                <td>
+                    <input id="inline1" type="button" value="-" style="width:30px; height:28px;" name="add"><nobr></nobr>
+                    <input id="inline2" type="text" value='0' style="width:64px;height:25px;" name="amount"><nobr></nobr>
+                    <input type="button" value="+" style="width:30px; height:28px;" name="sub"><nobr></nobr>
+
+                    <input type="checkbox" name="goods_id" th:value="${item.getGoods_id()}" readonly="readonly">
+
+                    <input  type="text" th:value="${item.getGoods_id()}" name="goods_id" hidden="hidden">
+                    <input  type="text" th:value="${store_id}" name="store_id" hidden="hidden">
+                    <input  type="text" th:value="${item.getUnit_sale_price()}" name="unit_sale_price" hidden="hidden">
+                    <input  type="text" th:value="${client.getClient_balance()}" name="client_balance" hidden="hidden">
+
+
+                </td>
+            </tr>
+        </div>
+    </table>
+
+    <p><input type="submit" id="place_client_order" value="提交订单"></p>
+
+</div>
+
+<div>
+    <input type="hidden" th:name="store_id" th:value="${store_id}">
+    <input type="hidden" th:name="store_name" th:value="${store_name}">
+    <input type="hidden" th:name="field_name" th:value="${field_name}">
+    <input type="hidden" th:name="field_value" th:value="${field_value}">
+    <input type="hidden" th:name="start_page" th:value="${start_page}">
+    <input type="hidden" th:name="page_size" th:value="${page_size}">
+</div>
+
+
+</body>
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/add_client_order.js"></script>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style>
+    .table-a table{border:1px solid yellow}
+</style>
+
+<script th:inline="none"></script>
+<body>
+
+    <div>
+        <form action="save_edit_stock" method="post">
+            <div>门店 id 号
+                <input type="text"  th:name="store_id" id="store_id"
+                       th:value="${stock.getStore_id()}" readonly="readonly"/>
+            </div>
+
+            <div>商品 id 号：
+                <input type="text"  th:name="goods_id" id="goods_id"
+                       th:value="${stock.getGoods_id()}" readonly="readonly">
+            </div>
+
+            <div>商品名：
+                <input type="text"  th:name="goods_name" id="goods_name"
+                       th:value="${stock.getGoods_name()}" readonly="readonly">
+            </div>
+
+            <div>当前库存数：
+                <input type="text" maxlength="4" th:name="amount" id="amount"
+                       th:value="${stock.getAmount()}" readonly="readonly">
+            </div>
+
+            <div>进货量：
+                <input type="text" maxlength="4" name="addAmount" id="addAmount"
+                       th:value="">
+            </div>
+
+
+            <input type="hidden" th:name="store_id" th:value="${stock.getStore_id()}">
+            <input type="hidden" th:name="start_page" th:value="${start_page}">
+            <input type="hidden" th:name="page_size" th:value="${page_size}">
+
+            <div><input type="submit" value="保存"></div>
+
+        </form>
+    </div>
+</body>
+</html>
